@@ -10,7 +10,7 @@ build-dotnet-code:       # Build worker code.
   cache:
     key: ${CI_COMMIT_REF_SLUG}     # Isolated cache for each branch
     paths:
-      - ~/.nuget/packages/**         # Save restored packages (Nuget)
+      - worker/.nuget/packages/**         # Save restored packages (Nuget)
   script:
     - echo "Compiling the code..."
     - cd worker
