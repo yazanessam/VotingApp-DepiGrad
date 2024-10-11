@@ -19,7 +19,7 @@ build-dotnet-code:       # Build worker code.
       - ~/.nuget/packages/  # Save restored packages (Nuget)
   artifacts:
     paths:
-      - /app
+      - app
   only:
     - Development
     - main
