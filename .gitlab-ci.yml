@@ -23,6 +23,7 @@ build-dotnet-code:       # Build worker code.
     paths:
       - worker/publish/
   only:
+    - prepare
     - Development
     - main
     - tags
