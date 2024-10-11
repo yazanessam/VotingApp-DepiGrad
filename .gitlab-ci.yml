@@ -33,9 +33,8 @@ test-dontnet-code:   # Test worker code.
   script:
     - echo "Running unit tests... This will take about 60 seconds."
     - cd worker
-    - mkdir -p TestResults    # Create TestResults folder if it doensn't exist 
+    - mkdir -p worker/TestResults    # Create TestResults folder if it doensn't exist 
     - dotnet test  --logger "trx;LogFileName=TestResults/Dotnet-TestResults_$(date +%s).trx"      # Test the code and save the testing results.
-    - pwd
     - ls -R worker/TestResults
   artifacts:
     paths:
