@@ -11,7 +11,7 @@ build-dotnet-code:       # Build worker code.
     - echo "Compiling the code..."
     - cd worker
     - dotnet restore
-    - dotnet publish -c Release -o /app --self-contained false
+    - dotnet publish -c Release -o publish --self-contained false
     - echo "Compile complete."
   cache:
     key: ${CI_COMMIT_REF_SLUG}     # Isolated cache for each branch
@@ -19,7 +19,7 @@ build-dotnet-code:       # Build worker code.
       - ~/.nuget/packages/  # Save restored packages (Nuget)
   artifacts:
     paths:
-      - app
+      - publich
   only:
     - Development
     - main
