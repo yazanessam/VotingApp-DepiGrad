@@ -29,6 +29,7 @@ build-dotnet-code:       # Build worker code.
 
 test-dontnet-code:   # Test worker code.
   stage: test        # It only starts when the job in the build stage completes successfully.
+  image: mcr.microsoft.com/dotnet/sdk:7.0
   script:
     - echo "Running unit tests... This will take about 60 seconds."
     - mkdir -p TestResults    # Create TestResults folder if it doensn't exist 
