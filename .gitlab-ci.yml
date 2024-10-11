@@ -8,7 +8,7 @@ build-dotnet-code:       # Build worker code.
   stage: build
   image: mcr.microsoft.com/dotnet/sdk:7.0
   variables:
-    NUGET_PACKAGES: "/builds/$CI_PROJECT_NAMESPACE/$CI_PROJECT_NAME/.nuget/packages" 
+    NUGET_PACKAGES: "/builds/$CI_PROJECT_NAMESPACE/$CI_PROJECT_NAME/worker/.nuget/packages"   # Change nuget packages path 
   cache:
     key: ${CI_COMMIT_REF_SLUG}     # Isolated cache for each branch
     paths:
@@ -17,7 +17,6 @@ build-dotnet-code:       # Build worker code.
     - echo "Compiling the code..."
     - cd worker
     - dotnet restore
-    - dotnet nuget locals all -l
     - dotnet publish -c Release -o publish --self-contained false
     - echo "Compile complete."
   artifacts:
