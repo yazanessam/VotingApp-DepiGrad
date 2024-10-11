@@ -36,7 +36,7 @@ test-dontnet-code:   # Test worker code.
     - mkdir -p TestResults    # Create TestResults folder if it doensn't exist 
     - dotnet test  --logger "trx;LogFileName=TestResults/Dotnet-TestResults_$(date +%s).trx"      # Test the code and save the testing results.
     - pwd
-    - ls -R /TestResults
+    - ls -R worker/TestResults
   artifacts:
     paths:
       - worker/TestResults/*.trx
