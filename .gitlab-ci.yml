@@ -23,7 +23,6 @@ build-dotnet-code:       # Build worker code.
     paths:
       - worker/publish/
   only:
-    - prepare
     - Development
     - main
     - tags
@@ -38,7 +37,7 @@ test-dontnet-code:   # Test worker code.
     - dotnet test  --logger "trx;LogFileName=TestResults/Dotnet-TestResults_$(date +%s).trx" --results-directory TestResults     # Test the code and save the testing results.
   artifacts:
     paths:
-      - TestResults/*.trx
+      - worker/TestResults/*.trx
     expire_in: 1 week
   only:
     - prepare
