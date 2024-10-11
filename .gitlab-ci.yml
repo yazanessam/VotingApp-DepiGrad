@@ -10,7 +10,7 @@ build-dotnet-code:       # Build worker code.
   variables:
     NUGET_PACKAGES: "/builds/$CI_PROJECT_NAMESPACE/$CI_PROJECT_NAME/worker/.nuget/packages"   # Change nuget packages path 
   cache:
-    key: ${CI_COMMIT_REF_SLUG}     # Isolated cache for each branch
+    key: ${CI_COMMIT_REF_SLUG}            # Isolated cache for each branch
     paths:
       - worker/.nuget/packages/**         # Save restored packages (Nuget)
   script:
@@ -23,7 +23,6 @@ build-dotnet-code:       # Build worker code.
     paths:
       - worker/publish/
   only:
-    - prepare
     - Development
     - main
     - tags
