@@ -7,16 +7,18 @@ stages:          # List of stages for jobs, and their order of execution
 build-dotnet-code:       # Build worker code.
   stage: build
   image: mcr.microsoft.com/dotnet/sdk:7.0
+  variables:
+    NUGET_PACKAGES: "/builds/$CI_PROJECT_NAMESPACE/$CI_PROJECT_NAME/worker/.nuget/packages"   # Change nuget packages path 
+  cache:
+    key: ${CI_COMMIT_REF_SLUG}            # Isolated cache for each branch
+    paths:
+      - worker/.nuget/packages/**         # Save restored packages (Nuget)
   script:
     - echo "Compiling the code..."
     - cd worker
     - dotnet restore
     - dotnet publish -c Release -o publish --self-contained false
     - echo "Compile complete."
-  cache:
-    key: ${CI_COMMIT_REF_SLUG}     # Isolated cache for each branch
-    paths:
-      - worker/.nuget/packages/  # Save restored packages (Nuget)
   artifacts:
     paths:
       - worker/publish/
