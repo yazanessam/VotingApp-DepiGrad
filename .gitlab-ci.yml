@@ -7,6 +7,8 @@ stages:          # List of stages for jobs, and their order of execution
 build-dotnet-code:       # Build worker code.
   stage: build
   image: mcr.microsoft.com/dotnet/sdk:7.0
+  variables:
+    NUGET_PACKAGES: "/builds/$CI_PROJECT_NAMESPACE/$CI_PROJECT_NAME/.nuget/packages" 
   cache:
     key: ${CI_COMMIT_REF_SLUG}     # Isolated cache for each branch
     paths:
