@@ -21,7 +21,7 @@ build-dotnet-code:       # Build worker code.
     paths:
       - publish
   only:
-    - development
+    - Development
     - main
     - tags
 
