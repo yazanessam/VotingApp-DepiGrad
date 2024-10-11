@@ -15,6 +15,7 @@ build-dotnet-code:       # Build worker code.
     - echo "Compiling the code..."
     - cd worker
     - dotnet restore
+    - dotnet nuget locals all -l
     - dotnet publish -c Release -o publish --self-contained false
     - echo "Compile complete."
   artifacts:
