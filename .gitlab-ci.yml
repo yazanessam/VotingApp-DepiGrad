@@ -4,11 +4,26 @@ stages:          # List of stages for jobs, and their order of execution
   - test
   - deploy
 
-build-job:       # This job runs in the build stage, which runs first.
+build-dotnet-code:       # Build worker code.
   stage: build
+  image: mcr.microsoft.com/dotnet/sdk:7.0
   script:
     - echo "Compiling the code..."
+    - cd worker
+    - dotnet restore
+    - dotnet publish -c Release -o /app --self-contained false
     - echo "Compile complete."
+  cache:
+    key: ${CI_COMMIT_REF_SLUG}     # Isolated cache for each branch
+    paths:
+      - ~/.nuget/packages/  # Save restored packages (Nuget)
+  artifacts:
+    paths:
+      - publish
+  only:
+    - development
+    - main
+    - tags
 
 unit-test-job:   # This job runs in the test stage.
   stage: test    # It only starts when the job in the build stage completes successfully.
