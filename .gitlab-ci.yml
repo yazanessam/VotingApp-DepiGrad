@@ -46,6 +46,7 @@ test-flask-code:   # Test vote code.
     - echo "Running unit tests... This will take about 60 seconds."
     - cd vote
     - pip install -r requirements.txt
+    - pip install flake8 pytest
     - flake8 .
     - pytest tests/
   only:
