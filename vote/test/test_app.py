@@ -14,8 +14,8 @@ def test_home_page(client):
     """Test loading the home page"""
     response = client.get('/')
     assert response.status_code == 200
-    assert b'Cats' in response.data  
-    assert b'Dogs' in response.data  
+    assert b'Cats' in response.data
+    assert b'Dogs' in response.data
 
 
 def test_post_vote(client):
