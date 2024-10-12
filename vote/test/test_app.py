@@ -3,6 +3,7 @@
 import pytest
 from vote.app import app  # Ensure to import the app correctly
 
+
 @pytest.fixture
 def client():
     with app.test_client() as client:
