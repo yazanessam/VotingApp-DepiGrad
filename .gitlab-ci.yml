@@ -48,7 +48,7 @@ test-flask-code:   # Test vote code.
     - pip install -r requirements.txt
     - pip install flake8 pytest
     - flake8 .
-    - pytest 
+    - pytest tests/ 
   only:
     - prepare
     - Development
