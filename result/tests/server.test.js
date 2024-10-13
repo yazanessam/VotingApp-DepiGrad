@@ -11,6 +11,12 @@ const app = express();
 const server = http.createServer(app);
 const io = socketIo(server);
 
+// Define your routes here
+app.use(express.static(path.join(__dirname, '../views'))); // Make sure to serve static files
+app.get('/', (req, res) => {
+  res.sendFile(path.resolve(__dirname, '../views/index.html')); // Update the path if needed
+});
+
 // Initialize your app routes and socket.io
 
 describe('Voting App', () => {
@@ -36,11 +42,14 @@ describe('Voting App', () => {
       };
       callback(null, client);
     });
+
+    server.listen(3000); // Start the server on a specific port
   });
 
   afterAll(() => {
     // Clean up any resources
     pool.end();
+    server.close(); // Close the server after tests
   });
 
   it('should respond with the index HTML file', async () => {
