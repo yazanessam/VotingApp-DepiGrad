@@ -3,6 +3,7 @@ const request = require('supertest'); // For testing HTTP requests
 const { Pool } = require('pg'); // PostgreSQL client
 const http = require('http');
 const socketIo = require('socket.io');
+const path = require('path');
 
 jest.mock('pg'); // Mock the pg module
 
@@ -11,7 +12,6 @@ const server = http.createServer(app);
 const io = socketIo(server);
 
 // Initialize your app routes and socket.io
-// ...
 
 describe('Voting App', () => {
   let pool;
@@ -19,7 +19,7 @@ describe('Voting App', () => {
   beforeAll(() => {
     // Create a mock instance of Pool
     pool = new Pool();
-    
+
     // Mock the connect method to simulate successful connection
     pool.connect.mockImplementation((callback) => {
       // Simulate successful connection
@@ -43,7 +43,7 @@ describe('Voting App', () => {
     pool.end();
   });
 
-  it('should respond with the current vote counts', async () => {
+  it('should respond with the index HTML file', async () => {
     const response = await request(server).get('/'); 
 
     expect(response.status).toBe(200);
