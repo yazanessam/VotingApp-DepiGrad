@@ -1,8 +1,60 @@
 
 stages:          # List of stages for jobs, and their order of execution
+  - prepare
   - build
   - test
   - deploy
+
+services:
+  - docker:24.0.5-dind
+
+variables: 
+  CI_IMAGE_TEST: $CI_REGISTRY/devops-s4e/e-commerce-s4e/$CI_ENVIRONMENT_NAME:$CI_COMMIT_SHA
+  CI_IMAGE_STAGING: $CI_REGISTRY/devops-s4e/e-commerce-s4e/$CI_ENVIRONMENT_NAME:$CI_COMMIT_SHA
+  CI_IMAGE_PROD: $CI_REGISTRY/devops-s4e/e-commerce-s4e/$CI_ENVIRONMENT_NAME:$CI_COMMIT_TAG
+
+prepare-test-env:
+  environment: test
+  stage: prepare
+  script: 
+    - echo "start preparing env test vars"
+    - echo "
+      export CI_IMAGE_VER=$CI_IMAGE_TEST; 
+      export CI_ENV=$CI_ENVIRONMENT_NAME;" >> shared-vars.sh
+  artifacts: 
+    paths:
+      - shared-vars.sh
+  only: 
+    - Development
+
+prepare-staging-env:
+  environment: staging
+  stage: prepare
+  script:
+    - echo "start preparing env staging vars"
+    - echo "
+      export CI_IMAGE_VER=$CI_IMAGE_STAGING;
+      export CI_ENV=$CI_ENVIRONMENT_NAME;" >> shared-vars.sh
+  artifacts:
+    paths:
+      - shared-vars.sh
+  only:
+    - main
+
+prepare-production-env:
+  environment: production
+  stage: prepare
+  script:
+    - echo "start preparing env production vars"
+    - echo "
+      export CI_IMAGE_VER=$CI_IMAGE_PROD;
+      export CI_ENV=$CI_ENVIRONMENT_NAME;" >> shared-vars.sh
+  artifacts:
+    paths:
+      - shared-vars.sh
+  only:
+    - tags
+
 
 build-dotnet-code:       # Build worker code.
   stage: build
