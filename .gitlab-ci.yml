@@ -50,6 +50,20 @@ test-flask-code:   # Test vote code.
     - PYTHONPATH=. pytest tests/
     - flake8 .
   only:
+    - Development
+    - main
+    - tags
+
+test-nodejs-code:   # Test result code.
+  stage: test  
+  image: node:18
+  script:
+    - echo "Running unit tests... This will take about 60 seconds."
+    - cd result
+    - npm install
+    - npm install --save-dev jest supertest
+    - npm test 
+  only:
     - prepare
     - Development
     - main
