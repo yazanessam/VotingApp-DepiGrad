@@ -130,7 +130,6 @@ package-dotnet-code:       # Dockerizing worker app .
     - docker push $CI_REGISTRY/depi9980437/voting-app/worker:$CI_ENVIRONMENT_NAME-$CI_IMAGE_VER
     - echo "Your package is ready."
   only:
-    - prepare
     - Development
     - main
     - tags
