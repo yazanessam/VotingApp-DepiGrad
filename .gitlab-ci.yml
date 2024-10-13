@@ -47,7 +47,7 @@ test-flask-code:   # Test vote code.
     - cd vote
     - pip install -r requirements.txt
     - pip install flake8 pytest
-    - PYTHONPATH=. pytest vote/tests/
+    - PYTHONPATH=. pytest tests/
     - flake8 .
   only:
     - prepare
