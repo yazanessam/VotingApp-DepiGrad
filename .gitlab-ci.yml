@@ -118,7 +118,7 @@ test-nodejs-code:   # Test result code.
     - main
     - tags
 
-package-dotnet-job:       # Dockerizing worker app .
+package-dotnet-code:       # Dockerizing worker app .
   stage: package
   image: docker:24.0.5
   before_script: 
@@ -127,10 +127,9 @@ package-dotnet-job:       # Dockerizing worker app .
     - echo "Packaging the code..."
     - docker login $CI_REGISTRY -u $CI_REGISTRY_USER -p $CI_REGISTRY_PASSWORD
     - docker build -t $CI_IMAGE_VER ./worker
-    - docker push  $CI_REGISTRY/depi9980437/voting-app/$CI_ENVIRONMENT_NAME/worker:$CI_IMAGE_VER
+    - docker push $CI_REGISTRY/depi9980437/voting-app/worker:$CI_ENVIRONMENT_NAME-$CI_IMAGE_VER
     - echo "Your package is ready."
   only:
-    - prepare
     - Development
     - main
     - tags
