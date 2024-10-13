@@ -1,5 +1,5 @@
 import pytest
-from vote.app import app  # Ensure this path is correct
+from app import app  # Ensure this path is correct
 
 @pytest.fixture
 def client():
