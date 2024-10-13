@@ -1,8 +1,59 @@
 
 stages:          # List of stages for jobs, and their order of execution
+  - prepare
   - build
   - test
+  - package
   - deploy
+
+services:
+  - docker:24.0.5-dind
+
+variables: 
+  CI_IMAGE_TEST: $CI_COMMIT_SHA
+  CI_IMAGE_PROD: $CI_COMMIT_TAG
+
+prepare-test-env:
+  environment: test
+  stage: prepare
+  script: 
+    - echo "start preparing env test vars"
+    - echo "
+      export CI_IMAGE_VER=$CI_IMAGE_TEST;   
+      export CI_ENV=$CI_ENVIRONMENT_NAME;" >> shared-vars.sh
+  artifacts: 
+    paths:
+      - shared-vars.sh
+  only: 
+    - Development
+
+prepare-staging-env:
+  environment: staging
+  stage: prepare
+  script:
+    - echo "start preparing env staging vars"
+    - echo "
+      export CI_IMAGE_VER=$CI_IMAGE_TEST;
+      export CI_ENV=$CI_ENVIRONMENT_NAME;" >> shared-vars.sh
+  artifacts:
+    paths:
+      - shared-vars.sh
+  only:
+    - main
+
+prepare-production-env:
+  environment: production
+  stage: prepare
+  script:
+    - echo "start preparing env production vars"
+    - echo "
+      export CI_IMAGE_VER=$CI_IMAGE_PROD;
+      export CI_ENV=$CI_ENVIRONMENT_NAME;" >> shared-vars.sh
+  artifacts:
+    paths:
+      - shared-vars.sh
+  only:
+    - tags
 
 build-dotnet-code:       # Build worker code.
   stage: build
@@ -63,10 +114,27 @@ test-nodejs-code:   # Test result code.
     - npm install --save-dev jest supertest
     - npm test 
   only:
+    - Development
+    - main
+    - tags
+
+package-dotnet-job:       # Dockerizing worker app .
+  stage: package
+  image: docker:24.0.5
+  before_script: 
+    - source shared-vars.sh
+  script:
+    - echo "Packaging the code..."
+    - docker login $CI_REGISTRY -u $CI_REGISTRY_USER -p $CI_REGISTRY_PASSWORD
+    - docker build -t $CI_IMAGE_VER ./worker
+    - docker push  $CI_REGISTRY/depi9980437/voting-app/$CI_ENVIRONMENT_NAME/worker:$CI_IMAGE_VER
+    - echo "Your package is ready."
+  only:
     - prepare
     - Development
     - main
     - tags
+
 
 deploy-job:      # This job runs in the deploy stage.
   stage: deploy  # It only runs when *both* jobs in the test stage complete successfully.
