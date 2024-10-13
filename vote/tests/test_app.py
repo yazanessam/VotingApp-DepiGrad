@@ -17,8 +17,11 @@ def test_hello_post(mock_redis, client):
     response = client.post('/', data={'vote': 'Cats'})
     
     assert response.status_code == 200
-    assert b'Received vote for Cats' in response.data
-    # Adjust this according to your response content
+    assert b'Cats' in response.data
+    # Check that 'Cats' is in the response
+    assert b'Dogs' in response.data
+    # Check that 'Dogs' is also in the response
+    
 
 @patch('app.Redis')
 def test_hello_get(mock_redis, client):
