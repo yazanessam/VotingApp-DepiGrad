@@ -1,7 +1,7 @@
 import json
 import pytest
 from unittest.mock import patch
-from vote.app import app  # Ensure this path is correct
+from app import app  # Ensure this path is correct
 
 @pytest.fixture
 def client():
