@@ -1,0 +1,2 @@
+[server]
+192.168.98.130 ansible_ssh_user=worker2
