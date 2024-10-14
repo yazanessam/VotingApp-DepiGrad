@@ -126,8 +126,8 @@ package-dotnet-code:       # Dockerizing worker app .
   script:
     - echo "Packaging the code..."
     - docker login $CI_REGISTRY -u $CI_REGISTRY_USER -p $CI_REGISTRY_PASSWORD
-    - docker build -t $CI_REGISTRY/depi9980437/voting-app/$CI_ENVIRONMENT_NAME/worker:$CI_IMAGE_VER ./worker
-    - docker push $CI_REGISTRY/depi9980437/voting-app/$CI_ENVIRONMENT_NAME/worker:$CI_IMAGE_VER
+    - docker build -t $CI_REGISTRY/depi9980437/voting-app/worker:CI_ENV-$CI_IMAGE_VER ./worker
+    - docker push $CI_REGISTRY/depi9980437/voting-app/worker:$CI_ENV-CI_IMAGE_VER
     - echo "Your package is ready."
   only:
     - Development
@@ -137,7 +137,6 @@ package-dotnet-code:       # Dockerizing worker app .
 
 deploy-job:      # This job runs in the deploy stage.
   stage: deploy  # It only runs when *both* jobs in the test stage complete successfully.
-  environment: production
   script:
     - echo "Deploying application..."
     - echo "Application successfully deployed."
