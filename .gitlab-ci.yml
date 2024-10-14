@@ -126,7 +126,7 @@ package-dotnet-code:       # Dockerizing worker app .
   script:
     - echo "Packaging the code..."
     - docker login $CI_REGISTRY -u $CI_REGISTRY_USER -p $CI_REGISTRY_PASSWORD
-    - docker build -t $CI_REGISTRY/depi9980437/voting-app/worker:CI_ENV-$CI_IMAGE_VER ./worker
+    - docker build -t $CI_REGISTRY/depi9980437/voting-app/worker:$CI_ENV-$CI_IMAGE_VER ./worker
     - docker push $CI_REGISTRY/depi9980437/voting-app/worker:$CI_ENV-$CI_IMAGE_VER
     - echo "Your package is ready."
   only:
