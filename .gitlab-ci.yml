@@ -134,6 +134,37 @@ package-dotnet-code:       # Dockerizing worker app .
     - main
     - tags
 
+package-flask-code:       # Dockerizing vote app .
+  stage: package
+  image: docker:24.0.5
+  before_script: 
+    - source shared-vars.sh
+  script:
+    - echo "Packaging the code..."
+    - docker login $CI_REGISTRY -u $CI_REGISTRY_USER -p $CI_REGISTRY_PASSWORD
+    - docker build -t $CI_REGISTRY/depi9980437/voting-app/vote:$CI_ENV-$CI_IMAGE_VER ./vote
+    - docker push $CI_REGISTRY/depi9980437/voting-app/vote:$CI_ENV-$CI_IMAGE_VER
+    - echo "Your package is ready."
+  only:
+    - Development
+    - main
+    - tags
+
+package-nodejs-code:       # Dockerizing result app .
+  stage: package
+  image: docker:24.0.5
+  before_script: 
+    - source shared-vars.sh
+  script:
+    - echo "Packaging the code..."
+    - docker login $CI_REGISTRY -u $CI_REGISTRY_USER -p $CI_REGISTRY_PASSWORD
+    - docker build -t $CI_REGISTRY/depi9980437/voting-app/result:$CI_ENV-$CI_IMAGE_VER ./result
+    - docker push $CI_REGISTRY/depi9980437/voting-app/result:$CI_ENV-$CI_IMAGE_VER
+    - echo "Your package is ready."
+  only:
+    - Development
+    - main
+    - tags
 
 deploy-job:      # This job runs in the deploy stage.
   stage: deploy  # It only runs when *both* jobs in the test stage complete successfully.
