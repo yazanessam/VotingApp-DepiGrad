@@ -169,8 +169,9 @@ package-nodejs-code:       # Dockerizing result app .
 
 ansible-config-infra:
   stage: config-infra
-  image: ansible/ansible-runner:latest
+  image: alpine:latest
   before_script:
+    - apk update && apk add openssh-client ansible
     - eval $(ssh-agent -s)
     - echo "$SSH_PRIVATE_KEY" | tr -d '\r' | ssh-add -
     - mkdir -p ~/.ssh
