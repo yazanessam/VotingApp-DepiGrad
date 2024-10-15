@@ -172,7 +172,7 @@ ansible-config-infra:
   image: ubuntu:latest
   before_script:
     - apt-get update
-    - apt-get install sshpass
+    - apt-get install -y sshpass
     - sshpass -p "$CI_RUNNER_PASS" ssh "$CI_RUNNER_USER@$CI_RUNNER_HOST"
   script:
     - echo "config infra machines"
