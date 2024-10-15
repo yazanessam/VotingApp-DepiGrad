@@ -169,7 +169,7 @@ package-nodejs-code:       # Dockerizing result app .
 
 ansible-config-infra:
   stage: config-infra
-  image: ghcr.io/ansible-community/community-ee-base:latest
+  image: ubuntu:latest
   before_script:
     - apt-get install sshpass
     - sshpass -p "$CI_RUNNER_PASS" ssh "$CI_RUNNER_USER@$CI_RUNNER_HOST"
