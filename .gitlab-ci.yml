@@ -175,6 +175,8 @@ ansible-config-infra:
   - echo "$SSH_PRIVATE_KEY" | tr -d '\r' | ssh-add -
   - mkdir -p ~/.ssh
   - chmod 700 ~/.ssh
+  - touch ~/.ssh/known_hosts
+  - chmod 600 ~/.ssh/known_hosts
   - ssh-keyscan 192.168.60.133 >> ~/.ssh/known_hosts
   script:
     - echo "config infra machines"
