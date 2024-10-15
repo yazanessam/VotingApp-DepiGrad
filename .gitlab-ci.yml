@@ -170,13 +170,17 @@ package-nodejs-code:       # Dockerizing result app .
 ansible-config-infra:
   stage: config-infra
   image: ghcr.io/ansible-community/community-ee-base:latest
+  before_script:
+  - 'which ssh-agent || ( apt-get update -y && apt-get install openssh-client -y )'
+  - eval $(ssh-agent -s)
+  - echo "$SSH_PRIVATE_KEY" | tr -d '\r' | ssh-add -
+  - mkdir -p ~/.ssh
+  - chmod 700 ~/.ssh
+  - ssh-keyscan 192.168.60.133 >> ~/.ssh/known_hosts
   script:
     - echo "config infra machines"
     - cd ./ansible-config
     - mkdir -p output
-    - echo $CI_RUNNER_HOST
-    - echo $CI_RUNNER_USER
-    - echo $CI_RUNNER_PASS
     - ansible-playbook -i inventory infra-config.yml | tee ./output/infra-config.txt
   artifacts:
     paths:
@@ -195,3 +199,7 @@ deploy-job:      # This job runs in the deploy stage.
     - Development
     - main
     - tags
+
+
+
+
