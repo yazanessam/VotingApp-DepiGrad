@@ -1,2 +1,2 @@
 [runner]
-runner_host
+192.168.60.133 ansible_ssh_user=gitlab ansible_ssh_pass=k8s001

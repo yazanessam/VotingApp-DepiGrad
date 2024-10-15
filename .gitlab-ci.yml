@@ -177,7 +177,7 @@ ansible-config-infra:
     - echo $CI_RUNNER_HOST
     - echo $CI_RUNNER_USER
     - echo $CI_RUNNER_PASS
-    - ansible-playbook -i inventory infra-config.yml --extra-vars "ansible_host=$CI_RUNNER_HOST ansible_ssh_user=$CI_RUNNER_USER ansible_ssh_pass=$CI_RUNNER_PASS"| tee ./output/infra-config.txt
+    - ansible-playbook -i inventory infra-config.yml | tee ./output/infra-config.txt
   artifacts:
     paths:
       - ./ansible-config/inventory
