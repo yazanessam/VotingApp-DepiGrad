@@ -174,9 +174,9 @@ ansible-config-infra:
     - echo "config infra machines"
     - cd ./ansible-config
     - mkdir -p output
-    - echo "Host: $CI_RUNNER_HOST"
-    - echo "User: $CI_RUNNER_USER"
-    - echo "Pass: $CI_RUNNER_PASS"
+    - echo $CI_RUNNER_HOST
+    - echo $CI_RUNNER_USER
+    - echo $CI_RUNNER_PASS
     - ansible-playbook -i inventory infra-config.yml --extra-vars "ansible_host=$CI_RUNNER_HOST ansible_ssh_user=$CI_RUNNER_USER ansible_ssh_pass=$CI_RUNNER_PASS"| tee ./output/infra-config.txt
   artifacts:
     paths:
