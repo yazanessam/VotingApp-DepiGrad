@@ -1,2 +1,2 @@
-[server]
-192.168.98.130 ansible_ssh_user=worker2
+[runner]
+ansible_host={{ CI_RUNNER_HOST }} ansible_ssh_user={{ CI_RUNNER_USER }} ansible_ssh_pass={{ CI_RUNNER_PASS }}
