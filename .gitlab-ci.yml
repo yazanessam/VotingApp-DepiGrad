@@ -169,15 +169,15 @@ package-nodejs-code:       # Dockerizing result app .
 
 ansible-config-infra:
   stage: config-infra
-  image: ghcr.io/ansible-community/community-ee-base:latest
+  image: ansible/ansible-runner:latest
   before_script:
-  - eval $(ssh-agent -s)
-  - echo "$SSH_PRIVATE_KEY" | tr -d '\r' | ssh-add -
-  - mkdir -p ~/.ssh
-  - chmod 700 ~/.ssh
-  - touch ~/.ssh/known_hosts
-  - chmod 600 ~/.ssh/known_hosts
-  - ssh-keyscan 192.168.60.133 >> ~/.ssh/known_hosts
+    - eval $(ssh-agent -s)
+    - echo "$SSH_PRIVATE_KEY" | tr -d '\r' | ssh-add -
+    - mkdir -p ~/.ssh
+    - chmod 700 ~/.ssh
+    - touch ~/.ssh/known_hosts
+    - chmod 600 ~/.ssh/known_hosts
+    - ssh-keyscan 192.168.60.133 >> ~/.ssh/known_hosts
   script:
     - echo "config infra machines"
     - cd ./ansible-config
