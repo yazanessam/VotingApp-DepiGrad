@@ -171,7 +171,8 @@ ansible-config-infra:
   stage: config-infra
   image: ghcr.io/ansible-community/community-ee-base:latest
   before_script:
-    - ssh $CI_RUNNER_USER@$CI_RUNNER_HOST
+    - sudo apt-get install sshpass
+    - sshpass -p "$CI_RUNNER_PASS" ssh "$CI_RUNNER_USER@$CI_RUNNER_HOST"
   script:
     - echo "config infra machines"
     - cd ./ansible-config
