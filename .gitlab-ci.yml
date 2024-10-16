@@ -170,8 +170,6 @@ package-nodejs-code:       # Dockerizing result app .
 ansible-config-infra:
   stage: config-infra
   image: ghcr.io/ansible-community/community-ee-base:latest
-  before_script:
-    - ssh "$CI_RUNNER_USER@$CI_RUNNER_HOST"
   script:
     - echo "config infra machines"
     - cd ./ansible-config
