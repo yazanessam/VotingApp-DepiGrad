@@ -1,28 +1,20 @@
 #!/bin/bash
 
-# Ensure the script is run as root
-if [ "$EUID" -ne 0 ]
-  then echo "Please run as root"
-  exit
+sudo systemctl start docker
+sudo systemctl enable docker
+
+sudo apt-get update
+sudo apt-get install -y apt-transport-https curl
+
+if ! command -v docker &> /dev/null; then
+    sudo apt-get install -y docker.io
 fi
 
-# Install dependencies
-echo "Installing dependencies..."
-apt-get update -y
-apt-get install -y apt-transport-https curl docker.io
+sudo usermod -aG docker $USER
 
-# Add user to Docker group
-echo "Adding user to Docker group..."
-usermod -aG docker "$USER"
-
-# Download and install Minikube
-echo "Downloading and installing Minikube..."
 curl -Lo minikube https://storage.googleapis.com/minikube/releases/latest/minikube-linux-amd64
-chmod +x minikube
-mv minikube /usr/local/bin/
+sudo install minikube /usr/local/bin/
 
-# Start Minikube with Docker driver
-echo "Starting Minikube with Docker driver..."
 minikube start --driver=docker
 
-echo "Minikube setup completed successfully!"
+minikube status
