@@ -173,7 +173,7 @@ ansible-config-infra:
   script:
     - cd ./ansible-config
     - chmod +x setup_minikube.sh  
-    - ./setup_minikube.sh  
+    - sh ./setup_minikube.sh  
   only:
     - prepare
   tags:
