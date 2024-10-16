@@ -171,6 +171,7 @@ ansible-config-infra:
   stage: config-infra
   image: ubuntu:latest
   script:
+    - cd ./ansible-config
     - chmod +x setup_minikube.sh  
     - ./setup_minikube.sh  
   only:
