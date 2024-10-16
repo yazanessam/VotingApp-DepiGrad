@@ -167,19 +167,6 @@ package-nodejs-code:       # Dockerizing result app .
     - main
     - tags
 
-ansible-config-infra:
-  stage: config-infra
-  image: ubuntu:latest
-  script:
-    - cd ./ansible-config
-    - chmod +x setup_minikube.sh  
-    - sh ./setup_minikube.sh  
-  only:
-    - prepare
-  tags:
-    - k8s-cluster
-
-
 deploy-job:      # This job runs in the deploy stage.
   stage: deploy  # It only runs when *both* jobs in the test stage complete successfully.
   script:
