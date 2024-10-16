@@ -171,10 +171,14 @@ ansible-config-infra:
   stage: config-infra
   image: ghcr.io/ansible-community/community-ee-base:latest
   before_script:
-    - ssh -tt "$CI_RUNNER_USER@$CI_RUNNER_HOST"
+    - ssh "$CI_RUNNER_USER@$CI_RUNNER_HOST"
   script:
     - echo "config infra machines"
     - cd ./ansible-config
+    - echo "$CI_VM_SSH_PRIVATE_KEY" >> id_ssh_key
+    - echo "$CI_VM_SSH_PUBLIC_KEY" >> id_ssh_key.pub
+    - chmod 400 id_ssh_key
+    - ansible-galaxy collection install community.general
     - mkdir -p output
     - ansible-playbook -i inventory infra-config.yml | tee ./output/infra-config.txt
   artifacts:
