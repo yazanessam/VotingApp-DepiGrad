@@ -9,6 +9,7 @@ resource "azurerm_resource_group" "k8s_rg" {
 }
 
 # Virtual Network
+
 resource "azurerm_virtual_network" "k8s_vnet" {
   name                = "k8s-vnet"
   address_space       = ["10.0.0.0/16"]
