@@ -4,6 +4,7 @@ stages:          # List of stages for jobs, and their order of execution
   - build
   - test
   - package
+  - build-infra
   - deploy
 
 services:
@@ -12,6 +13,10 @@ services:
 variables: 
   CI_IMAGE_TEST: $CI_COMMIT_SHA
   CI_IMAGE_PROD: $CI_COMMIT_TAG
+  AZURE_CLIENT_ID: $CI_ARM_CLIENT_ID
+  AZURE_CLIENT_SECRET: $CI_ARM_CLIENT_SECRET
+  AZURE_TENANT_ID: $CI_ARM_TENANT_ID
+  AZURE_SUBSCRIPTION_ID: $CI_ARM_SUBSCRIPTION_ID
 
 prepare-test-env:
   environment: test
@@ -161,6 +166,28 @@ package-nodejs-code:       # Dockerizing result app .
     - docker build -t $CI_REGISTRY/depi9980437/voting-app/$CI_ENV/result:$CI_IMAGE_VER ./result
     - docker push $CI_REGISTRY/depi9980437/voting-app/$CI_ENV/result:$CI_IMAGE_VER
     - echo "Your package is ready."
+  only:
+    - Development
+    - main
+    - tags
+
+terraform-build-infra:
+  image: zenika/terraform-azure-cli:latest
+  stage: build-infra
+  script:
+    - echo "Logging in to Azure..."
+    - az login --service-principal -u $AZURE_CLIENT_ID -p $AZURE_CLIENT_SECRET --tenant $AZURE_TENANT_ID
+    - az account set -s $CI_ARM_SUBSCRIPTION_ID
+    - cd ./Terraform
+    - sh ./Build-Infra.sh
+  cache: 
+    paths:
+      - ./Terraform/.terraform
+      - ./Terraform/.terraform.lock.hcl
+      - ./Terraform/terraform.tfstate
+  artifacts: 
+    paths:
+      - ./Terraform/terraform-output.json
   only:
     - Development
     - main
