@@ -193,6 +193,25 @@ terraform-build-infra:
     - main
     - tags
 
+ansible-config-infra:
+  stage: config-infra
+  image: ghcr.io/ansible-community/community-ee-base:latest
+  script:
+    - echo "config infra machines"
+    - cd ./ansible-config
+    - echo "$CI_VM_SSH_PRIVATE_KEY" >> Gitlab_rsa
+    - sh ./config-infra.sh
+  artifacts:
+    paths:
+      - ./ansible-config/inventory.ini
+      - ./ansible-config/minikube-playbook-output.txt
+  only:
+    - Development
+    - main
+    - tags
+
+
+
 deploy-job:      # This job runs in the deploy stage.
   stage: deploy  # It only runs when *both* jobs in the test stage complete successfully.
   script:
