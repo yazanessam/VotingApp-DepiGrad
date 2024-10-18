@@ -3,7 +3,7 @@ import configparser
 import os
 
 # Load the JSON output
-with open('../terraform/terraform-output.json', 'r') as file:
+with open('../Terraform/terraform-output.json', 'r') as file:
     data = json.load(file)
 
 # Create a ConfigParser object

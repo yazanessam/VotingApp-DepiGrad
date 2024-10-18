@@ -5,6 +5,5 @@ export TF_USERNAME=$CI_TF_USERNAME
 echo "Initializing Terraform..."
 terraform init
 echo "Applying Terraform configuration..."
-terraform refresh
 terraform apply -auto-approve -var="admin_username=$TF_USERNAME" | tee terraform-output.txt
 terraform output -json > terraform-output.json
