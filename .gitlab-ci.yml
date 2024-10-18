@@ -184,15 +184,14 @@ terraform-build-infra:
     paths:
       - ./Terraform/.terraform
       - ./Terraform/.terraform.lock.hcl
-      - ./Terraform/.terraform.lock.hcl.info
       - ./Terraform/terraform.tfstate
-      - ./Terraform/terraform.tfstate.backup
   artifacts: 
     paths:
       - ./Terraform/terraform-output.json
   only:
-    - prepare
-
+    - Development
+    - main
+    - tags
 
 deploy-job:      # This job runs in the deploy stage.
   stage: deploy  # It only runs when *both* jobs in the test stage complete successfully.
