@@ -4,3 +4,7 @@ bin/
 obj/
 .vs/
 node_modules/
+Terraform/terraform.tfstate
+Terraform/.terraform
+Terraform/.terraform.lock.hcl
+Terraform/terraform-output.txt
