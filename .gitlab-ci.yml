@@ -177,6 +177,7 @@ terraform-build-infra:
   script:
     - echo "Logging in to Azure..."
     - az login --service-principal -u $AZURE_CLIENT_ID -p $AZURE_CLIENT_SECRET --tenant $AZURE_TENANT_ID
+    - az account set -s $CI_ARM_SUBSCRIPTION_ID
     - cd ./Terraform
     - sh ./build-infra.sh
   cache: 
