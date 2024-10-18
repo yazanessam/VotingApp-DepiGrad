@@ -5,3 +5,4 @@ echo "Initializing Terraform..."
 terraform init
 echo "Applying Terraform configuration..."
 terraform apply -auto-approve -var="admin_username=$CI_TF_USERNAME" | tee terraform-output.txt
+terraform output -json > terraform-output.json

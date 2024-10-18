@@ -182,14 +182,14 @@ terraform-build-infra:
     - sh ./Build-Infra.sh
   cache: 
     paths:
-      - ./terraform/.terraform
-      - ./terraform/.terraform.lock.hcl
-      - ./terraform/.terraform.lock.hcl.info
-      - ./terraform/terraform.tfstate
-      - ./terraform/terraform.tfstate.backup
+      - ./Terraform/.terraform
+      - ./Terraform/.terraform.lock.hcl
+      - ./Terraform/.terraform.lock.hcl.info
+      - ./Terraform/terraform.tfstate
+      - ./Terraform/terraform.tfstate.backup
   artifacts: 
     paths:
-      - ./terraform/terraform-output.txt
+      - ./Terraform/terraform-output.json
   only:
     - prepare
 
