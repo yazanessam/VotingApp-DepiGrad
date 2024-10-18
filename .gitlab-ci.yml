@@ -179,7 +179,7 @@ terraform-build-infra:
     - az login --service-principal -u $AZURE_CLIENT_ID -p $AZURE_CLIENT_SECRET --tenant $AZURE_TENANT_ID
     - az account set -s $CI_ARM_SUBSCRIPTION_ID
     - cd ./Terraform
-    - sh ./Build-infra.sh
+    - sh ./Build-Infra.sh
   cache: 
     paths:
       - ./terraform/.terraform
