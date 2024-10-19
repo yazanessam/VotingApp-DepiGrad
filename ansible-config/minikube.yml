@@ -1,6 +1,6 @@
 ---
 - name: Install Docker and Minikube
-  hosts: server
+  hosts: minikube
   become: yes
 
   tasks:
