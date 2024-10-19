@@ -11,5 +11,5 @@ Terraform/terraform-output.txt
 Terraform/.terraform.tfstate.lock.info
 Terraform/terraform.tfstate.backup
 Terraform/terraform-output.json
-ansible-config/inventory
 ansible-config/Gitlab_rsa
+ansible-config/inventory.ini
