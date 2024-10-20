@@ -8,4 +8,7 @@ variable "vm_ssh_key" {
   type        = string
 }
 
-
+variable "subscription_id" {
+  description = "The Azure subscription ID"
+  type        = string
+}
