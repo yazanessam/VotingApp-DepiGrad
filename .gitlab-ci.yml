@@ -183,6 +183,7 @@ terraform-build-infra:
     paths:
       - ./Terraform/terraform-output.json
   only:
+    - Development
     - main
     - tags
 
