@@ -1,12 +1,12 @@
 provider "azurerm" {
-  subscription_id = "24b7566c-0d8d-4a8b-81ea-13cc183b6604"
+  subscription_id = var.subscription_id
   features {}
 }
 
 # Resource Group
 resource "azurerm_resource_group" "rg" {
   name     = "minikube-rg"
-  location = "East US 2"
+  location = "West Europe"
 }
 
 # Virtual Network
@@ -76,6 +76,12 @@ resource "azurerm_network_interface" "nic" {
     private_ip_address_allocation = "Dynamic"
     public_ip_address_id          = azurerm_public_ip.public_ip.id
   }
+}
+
+# Network Interface Security Group Association
+resource "azurerm_network_interface_security_group_association" "nic_nsg_association" {
+  network_interface_id      = azurerm_network_interface.nic.id
+  network_security_group_id = azurerm_network_security_group.nsg.id
 }
 
 # Virtual Machine
