@@ -189,7 +189,7 @@ terraform-build-infra:
 
 ansible-config-infra:
   stage: config-infra
-  image: serversideup/ansible
+  image: ghcr.io/ansible-community/community-ee-base:latest
   script:
     - echo "config infra machines"
     - cd ./ansible-config

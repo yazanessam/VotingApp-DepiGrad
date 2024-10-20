@@ -1,7 +1,8 @@
 ---
-  - name: Setup Minikube on Azure VM
+  - name: Setup Minikube on Azure VM with Python Update
     hosts: all
     become: yes
+    gather_facts: false
   
     tasks:
       - name: Update all packages
@@ -18,7 +19,42 @@
             - gnupg
             - lsb-release
           state: present
-  
+
+      - name: Ensure prerequisites are installed
+        apt:
+          name:
+            - software-properties-common
+          state: present
+
+      - name: Add deadsnakes PPA for Python
+        apt_repository:
+          repo: ppa:deadsnakes/ppa
+          state: present
+          update_cache: yes
+
+      - name: Install Python 3.12
+        apt:
+          name: python3.12
+          state: present
+
+      - name: Update default Python version
+        alternatives:
+          name: python3
+          link: /usr/bin/python3
+          path: /usr/bin/python3.12
+          priority: 2
+
+      - name: Install Python 3.12 pip
+        apt:
+          name: python3.12-distutils
+          state: present
+
+      - name: Install pip for Python 3.12
+        command: curl https://bootstrap.pypa.io/get-pip.py | python3.12
+
+      - name: Verify Python version
+        command: python3 --version
+
       - name: Add Docker’s official GPG key
         apt_key:
           url: https://download.docker.com/linux/ubuntu/gpg
@@ -77,4 +113,3 @@
       - name: Output Minikube status
         debug:
           var: minikube_status.stdout_lines
-  
