@@ -1,84 +1,64 @@
 ---
-- name: Setup Minikube on Azure VM
-  hosts: all
+- name: Install Docker and Minikube
+  hosts: minikube
   become: yes
-  gather_facts: false
-  
-  vars:
-    ansible_python_interpreter: /usr/bin/python3.8
-
+  gather_facts: no
+    
   tasks:
-    - name: Update all packages
-      apt:
-        update_cache: yes
-        upgrade: dist
-
-    - name: Install required packages
+    - name: Install dependencies
       apt:
         name:
           - apt-transport-https
           - ca-certificates
           - curl
-          - gnupg
-          - lsb-release
-          - python3-apt
+          - software-properties-common
         state: present
+        update_cache: yes
 
-    - name: Add Docker’s official GPG key
+    - name: Add Docker GPG key
       apt_key:
         url: https://download.docker.com/linux/ubuntu/gpg
         state: present
 
-    - name: Set up Docker repository
+    - name: Add Docker repository
       apt_repository:
         repo: deb [arch=amd64] https://download.docker.com/linux/ubuntu focal stable
         state: present
-        filename: docker
 
     - name: Install Docker
       apt:
         name: docker-ce
         state: present
+        update_cache: yes
 
-    - name: Add user to docker group
-      user:
-        name: "{{ ansible_user }}"
-        groups: docker
-        append: yes
-
-    - name: Enable and start Docker service
-      systemd:
-        name: docker
-        enabled: yes
-        state: started
-
-    - name: Download Minikube binary
+    - name: Download Minikube
       get_url:
         url: https://storage.googleapis.com/minikube/releases/latest/minikube-linux-amd64
         dest: /usr/local/bin/minikube
         mode: '0755'
 
-    - name: Install kubectl
-      apt:
+    - name: Install Kubectl (required for Minikube)
+      snap:
         name: kubectl
+        classic: yes
         state: present
 
-    - name: Install conntrack (required by Minikube)
-      apt:
-        name: conntrack
-        state: present
-
-    - name: Start Minikube with Docker driver
+    - name: Start Minikube
       command: minikube start --driver=docker
-      become: yes
+      register: minikube_output
+      ignore_errors: yes
 
-    - name: Ensure Minikube is up and running
-      shell: minikube status
+    - name: Check Minikube status
+      command: minikube status
       register: minikube_status
-      retries: 5
-      delay: 10
-      until: minikube_status.rc == 0
+      changed_when: false
 
-    - name: Output Minikube status
+    - name: Display Minikube status
       debug:
-        var: minikube_status.stdout_lines
+        var: minikube_status.stdout
+
+    - name: Enable Docker service
+      service:
+        name: docker
+        enabled: yes
+        state: started
