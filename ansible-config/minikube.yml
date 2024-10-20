@@ -1,112 +1,84 @@
 ---
-  - name: Setup Minikube on Azure VM with Python Update
-    hosts: all
-    become: yes
-    gather_facts: false
+- name: Setup Minikube on Azure VM
+  hosts: all
+  become: yes
+  gather_facts: false
   
-    tasks:
-      - name: Update all packages
-        apt:
-          update_cache: yes
-          upgrade: dist
-  
-      - name: Install required packages
-        apt:
-          name:
-            - apt-transport-https
-            - ca-certificates
-            - curl
-            - gnupg
-            - lsb-release
-          state: present
+  vars:
+    ansible_python_interpreter: /usr/bin/python3.8
 
-      - name: Ensure prerequisites are installed
-        apt:
-          name:
-            - software-properties-common
-          state: present
+  tasks:
+    - name: Update all packages
+      apt:
+        update_cache: yes
+        upgrade: dist
 
-      - name: Add deadsnakes PPA for Python
-        apt_repository:
-          repo: ppa:deadsnakes/ppa
-          state: present
-          update_cache: yes
+    - name: Install required packages
+      apt:
+        name:
+          - apt-transport-https
+          - ca-certificates
+          - curl
+          - gnupg
+          - lsb-release
+          - python3-apt
+        state: present
 
-      - name: Install Python 3.12
-        apt:
-          name: python3.12
-          state: present
+    - name: Add Docker’s official GPG key
+      apt_key:
+        url: https://download.docker.com/linux/ubuntu/gpg
+        state: present
 
-      - name: Update default Python version
-        command: update-alternatives --install /usr/bin/python3 python3 /usr/bin/python3.8 2
+    - name: Set up Docker repository
+      apt_repository:
+        repo: deb [arch=amd64] https://download.docker.com/linux/ubuntu focal stable
+        state: present
+        filename: docker
 
+    - name: Install Docker
+      apt:
+        name: docker-ce
+        state: present
 
-      - name: Install Python 3.12 pip
-        apt:
-          name: python3.12-distutils
-          state: present
+    - name: Add user to docker group
+      user:
+        name: "{{ ansible_user }}"
+        groups: docker
+        append: yes
 
-      - name: Install pip for Python 3.12
-        command: curl https://bootstrap.pypa.io/get-pip.py | python3.12
+    - name: Enable and start Docker service
+      systemd:
+        name: docker
+        enabled: yes
+        state: started
 
-      - name: Verify Python version
-        command: python3 --version
+    - name: Download Minikube binary
+      get_url:
+        url: https://storage.googleapis.com/minikube/releases/latest/minikube-linux-amd64
+        dest: /usr/local/bin/minikube
+        mode: '0755'
 
-      - name: Add Docker’s official GPG key
-        apt_key:
-          url: https://download.docker.com/linux/ubuntu/gpg
-          state: present
-  
-      - name: Set up Docker repository
-        apt_repository:
-          repo: deb [arch=amd64] https://download.docker.com/linux/ubuntu focal stable
-          state: present
-          filename: docker
-  
-      - name: Install Docker
-        apt:
-          name: docker-ce
-          state: present
-  
-      - name: Add user to docker group
-        user:
-          name: "{{ ansible_user }}"
-          groups: docker
-          append: yes
-  
-      - name: Enable and start Docker service
-        systemd:
-          name: docker
-          enabled: yes
-          state: started
-  
-      - name: Download Minikube binary
-        get_url:
-          url: https://storage.googleapis.com/minikube/releases/latest/minikube-linux-amd64
-          dest: /usr/local/bin/minikube
-          mode: '0755'
-  
-      - name: Install kubectl
-        apt:
-          name: kubectl
-          state: present
-  
-      - name: Install conntrack (required by Minikube)
-        apt:
-          name: conntrack
-          state: present
-  
-      - name: Start Minikube with Docker driver
-        command: minikube start --driver=docker
-        become: yes
-  
-      - name: Ensure Minikube is up and running
-        shell: minikube status
-        register: minikube_status
-        retries: 5
-        delay: 10
-        until: minikube_status.rc == 0
-  
-      - name: Output Minikube status
-        debug:
-          var: minikube_status.stdout_lines
+    - name: Install kubectl
+      apt:
+        name: kubectl
+        state: present
+
+    - name: Install conntrack (required by Minikube)
+      apt:
+        name: conntrack
+        state: present
+
+    - name: Start Minikube with Docker driver
+      command: minikube start --driver=docker
+      become: yes
+
+    - name: Ensure Minikube is up and running
+      shell: minikube status
+      register: minikube_status
+      retries: 5
+      delay: 10
+      until: minikube_status.rc == 0
+
+    - name: Output Minikube status
+      debug:
+        var: minikube_status.stdout_lines
