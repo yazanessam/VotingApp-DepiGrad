@@ -17,7 +17,7 @@ public_ip = data['public_ip']['value']
 
 # Add the public IP to the Ansible inventory under the 'minikube' section with separate key-value pairs
 config.add_section('minikube')
-config.set('minikube', f"{public_ip} ansible_user={ssh_user} ansible_ssh_private_key_file=./Gitlab_rsa")
+config.set('minikube', f"{public_ip} ansible_user={ssh_user} ansible_ssh_private_key_file=./gitlab_rsa")
 
 # Add common SSH arguments for all hosts
 config['all:vars'] = {
