@@ -2,6 +2,8 @@
 - name: Install Docker and Minikube
   hosts: minikube
   become: yes
+  variables:
+    ansible_python_interpreter: /usr/bin/python3
 
   tasks:
     - name: Install dependencies
