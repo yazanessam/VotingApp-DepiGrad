@@ -2,7 +2,8 @@
 - name: Install Docker and Minikube
   hosts: minikube
   become: yes
-
+  gather_facts: no
+  
   tasks:
     - name: Install dependencies
       apt:
