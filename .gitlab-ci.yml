@@ -80,7 +80,6 @@ build-dotnet-code:       # Build worker code.
     paths:
       - worker/publish/
   only:
-    - Development
     - main
     - tags
 
@@ -92,7 +91,6 @@ test-dontnet-code:   # Test worker code.
     - cd worker
     - dotnet test  --logger "trx;LogFileName=TestResults/Dotnet-TestResults_$(date +%s).trx"      # Test the code and save the testing results.
   only:
-    - Development
     - main
     - tags
 
@@ -107,7 +105,6 @@ test-flask-code:   # Test vote code.
     - PYTHONPATH=. pytest tests/
     - flake8 .
   only:
-    - Development
     - main
     - tags
 
@@ -120,7 +117,6 @@ test-nodejs-code:   # Test result code.
     - npm install --save-dev jest supertest
     - npm test 
   only:
-    - Development
     - main
     - tags
 
@@ -136,7 +132,6 @@ package-dotnet-code:       # Dockerizing worker app .
     - docker push $CI_REGISTRY/depi9980437/voting-app/$CI_ENV/worker:$CI_IMAGE_VER
     - echo "Your package is ready."
   only:
-    - Development
     - main
     - tags
 
@@ -152,7 +147,6 @@ package-flask-code:       # Dockerizing vote app .
     - docker push $CI_REGISTRY/depi9980437/voting-app/$CI_ENV/vote:$CI_IMAGE_VER
     - echo "Your package is ready."
   only:
-    - Development
     - main
     - tags
 
@@ -168,7 +162,6 @@ package-nodejs-code:       # Dockerizing result app .
     - docker push $CI_REGISTRY/depi9980437/voting-app/$CI_ENV/result:$CI_IMAGE_VER
     - echo "Your package is ready."
   only:
-    - Development
     - main
     - tags
 
@@ -216,4 +209,8 @@ deploy-job:      # This job runs in the deploy stage.
   script:
     - echo "Deploying application..."
     - echo "Application successfully deployed."
-
+  only:
+    - Development
+    - main
+    - tags
+  
