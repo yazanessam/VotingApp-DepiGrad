@@ -188,7 +188,7 @@ terraform-build-infra:
 
 ansible-config-infra:
   stage: config-infra
-  image: willhallonline/ansible:ubuntu-20.04
+  image: ansible/ansible-runner:latest
   script:
     - echo "config infra machines"
     - cd ./ansible-config
