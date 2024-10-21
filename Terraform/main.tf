@@ -132,11 +132,6 @@ resource "azurerm_virtual_machine" "vm" {
       "sudo apt-get update -y",
       "sudo apt-get install -y conntrack",
 
-      # Install crictl
-      "VERSION=\"v1.25.0\" && sudo curl -LO https://github.com/kubernetes-sigs/cri-tools/releases/download/$VERSION/crictl-$VERSION-linux-amd64.tar.gz",
-      "sudo tar zxvf crictl-$VERSION-linux-amd64.tar.gz -C /usr/local/bin",
-      "rm -f crictl-$VERSION-linux-amd64.tar.gz",
-
       # Update the system packages
       "sudo apt-get update -y",
       "sudo apt-get install -y apt-transport-https ca-certificates curl software-properties-common",
@@ -151,6 +146,16 @@ resource "azurerm_virtual_machine" "vm" {
       # Install Docker
       "sudo apt-get update -y",
       "sudo apt-get install -y docker-ce docker-ce-cli containerd.io",
+
+      # Install cri-dockerd dependencies
+      "sudo apt-get install -y golang-go",
+
+      # Install cri-dockerd
+      "git clone https://github.com/Mirantis/cri-dockerd.git",
+      "cd cri-dockerd",
+      "mkdir bin",
+      "go build -o bin/cri-dockerd",
+      "sudo install bin/cri-dockerd /usr/local/bin/",
 
       # Add current user to docker group to run without sudo
       "sudo usermod -aG docker $USER",

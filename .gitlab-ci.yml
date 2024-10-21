@@ -216,8 +216,7 @@ deploy-job:      # This job runs in the deploy stage.
     - source shared-vars.sh
   script:
     - echo "Deploying application..."
-    - chmod + deploy.sh
-    - ./deploy.sh
+    - sh ./deploy.sh
     - echo "Application successfully deployed."
   only:
     - Development
