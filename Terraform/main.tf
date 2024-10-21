@@ -131,7 +131,7 @@ resource "azurerm_virtual_machine" "vm" {
 
       "sudo apt-get update -y",
       "sudo apt-get upgrade -y",
-      "sudo apt-get install -y docker.io",
+      "sudo apt-get install -y docker.io conntrack",
       "sudo systemctl enable docker",
       "sudo systemctl start docker",
       "curl -LO https://storage.googleapis.com/minikube/releases/latest/minikube-linux-amd64",
