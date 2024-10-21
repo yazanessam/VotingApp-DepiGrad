@@ -128,23 +128,23 @@ resource "azurerm_virtual_machine" "vm" {
       host        = azurerm_public_ip.public_ip.ip_address
     }
     inline = [
+      # Update packages
       "sudo apt-get update",
       "sudo apt-get install -y apt-transport-https ca-certificates curl software-properties-common",
 
-      # Install Docker
-      "curl -fsSL https://download.docker.com/linux/ubuntu/gpg | sudo apt-key add -",
-      "sudo add-apt-repository 'deb [arch=amd64] https://download.docker.com/linux/ubuntu $(lsb_release -cs) stable'",
-      "sudo apt-get update",
-      "sudo apt-get install -y docker-ce",
+      # Install Docker using official script
+      "curl -fsSL https://get.docker.com -o get-docker.sh",
+      "sudo sh get-docker.sh",
 
       # Install Minikube
       "curl -LO https://storage.googleapis.com/minikube/releases/latest/minikube-linux-amd64",
       "sudo install minikube-linux-amd64 /usr/local/bin/minikube",
 
-      # Install kubectl
-      "curl -LO 'https://storage.googleapis.com/kubernetes-release/release/$(curl -s https://storage.googleapis.com/kubernetes-release/release/stable.txt)/bin/linux/amd64/kubectl'",
+      # Install kubectl using alternative URL
+      "curl -LO 'https://dl.k8s.io/release/$(curl -s https://dl.k8s.io/release/stable.txt)/bin/linux/amd64/kubectl'",
       "chmod +x ./kubectl",
       "sudo mv ./kubectl /usr/local/bin/kubectl",
+
     ]
   }
 
