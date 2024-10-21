@@ -80,6 +80,7 @@ build-dotnet-code:       # Build worker code.
     paths:
       - worker/publish/
   only:
+    - Development
     - main
     - tags
 
