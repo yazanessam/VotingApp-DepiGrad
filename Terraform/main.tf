@@ -148,10 +148,10 @@ resource "azurerm_virtual_machine" "vm" {
       "sudo apt-get install -y docker-ce docker-ce-cli containerd.io",
 
       # Download and install cri-dockerd (latest version)
-      "wget https://github.com/Mirantis/cri-dockerd/archive/refs/tags/v0.3.15.tar.gz",
+      "wget https://github.com/Mirantis/cri-dockerd/releases/download/v0.3.15/cridockerd-0.3.15.amd64.tgz",
 
       # Extract and move cri-dockerd to /usr/local/bin
-      "tar -xvf cri-dockerd-0.3.15.tar.gz",
+      "tar -xvf cri-dockerd-0.3.15.amd64.tgz",
       "sudo mv cri-dockerd/cri-dockerd /usr/local/bin/",
 
       # Set permissions
