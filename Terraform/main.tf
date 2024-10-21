@@ -121,6 +121,12 @@ resource "azurerm_virtual_machine" "vm" {
   }
 
   provisioner "remote-exec" {
+    connection {
+      type        = "ssh"
+      user        = var.admin_username
+      private_key = var.private_vm_ssh_key
+      host        = azurerm_public_ip.public_ip.ip_address
+    }
     inline = [
       # Update the system packages
       "sudo apt-get update -y",
