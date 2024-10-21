@@ -128,22 +128,50 @@ resource "azurerm_virtual_machine" "vm" {
       host        = azurerm_public_ip.public_ip.ip_address
     }
     inline = [
-
+      # Update the system packages
       "sudo apt-get update -y",
-      "sudo apt-get upgrade -y",
-      "sudo apt-get install -y docker.io conntrack",
-      "sudo systemctl enable docker",
-      "sudo systemctl start docker",
-      "curl -LO https://storage.googleapis.com/minikube/releases/latest/minikube-linux-amd64",
-      "sudo install minikube-linux-amd64 /usr/local/bin/minikube",
-      "wget https://github.com/kubernetes-sigs/cri-tools/releases/download/v1.26.0/crictl-v1.26.0-linux-amd64.tar.gz",
-      "tar zxvf crictl-v1.26.0-linux-amd64.tar.gz",
-      "sudo mv crictl /usr/local/bin/",
-      "sudo minikube start --driver=none --container-runtime=docker",
+      "sudo apt-get install -y conntrack socat golang apt-transport-https ca-certificates curl software-properties-common",
+
+      # Add Docker’s official GPG key and repository
+      "curl -fsSL https://download.docker.com/linux/ubuntu/gpg | sudo apt-key add -",
+      "sudo add-apt-repository \"deb [arch=amd64] https://download.docker.com/linux/ubuntu $(lsb_release -cs) stable\"",
+
+      # Install Docker
+      "sudo apt-get update -y",
+      "sudo apt-get install -y docker-ce docker-ce-cli containerd.io",
+
+      # Add current user to the Docker group
+      "sudo usermod -aG docker $USER",
+
+      # Install cri-dockerd for Kubernetes v1.24+
+      "git clone https://github.com/Mirantis/cri-dockerd.git",
+      "cd cri-dockerd && mkdir bin",
+      "go build -o bin/cri-dockerd -buildvcs=false",
+      "sudo install -o root -g root -m 0755 bin/cri-dockerd /usr/local/bin/",
+      "sudo systemctl daemon-reload",
+      "sudo systemctl enable cri-docker.service",
+      "sudo systemctl enable --now cri-docker.socket",
+
+      # Install Kubernetes (kubectl)
+      "curl -LO https://dl.k8s.io/release/$(curl -s https://dl.k8s.io/release/stable.txt)/bin/linux/amd64/kubectl",
+      "chmod +x kubectl && sudo mv kubectl /usr/local/bin/",
+
+      # Install Minikube
+      "curl -Lo minikube https://storage.googleapis.com/minikube/releases/latest/minikube-linux-amd64",
+      "chmod +x minikube && sudo mv minikube /usr/local/bin/",
+
+      # Install CNI plugins
+      "sudo mkdir -p /opt/cni/bin",
+      "wget https://github.com/containernetworking/plugins/releases/download/v1.1.1/cni-plugins-linux-amd64-v1.1.1.tgz",
+      "sudo tar -C /opt/cni/bin -xzf cni-plugins-linux-amd64-v1.1.1.tgz",
+
+      # Start Minikube with Docker as the container runtime
+      "sudo minikube start --driver=none --container-runtime=cri-docker",
+
+      # Validate the setup
       "sudo minikube status"
     ]
   }
-
 
   tags = {
     project = "minikube-voting-app"
