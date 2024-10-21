@@ -221,7 +221,7 @@ deploy-job:      # This job runs in the deploy stage.
     - eval $(ssh-agent -s)
     - echo "$SSH_PRIVATE_KEY" | tr -d '\r' | ssh-add -
     - mkdir -p ~/.ssh
-    - export AZURE_HOST=$(cat public_ip.txt)
+    - export AZURE_HOST=$(cat ./Terraform/public_ip.txt)
     - ssh-keyscan $AZURE_HOST >> ~/.ssh/known_hosts
   script:
     - echo "Deploying application..."
