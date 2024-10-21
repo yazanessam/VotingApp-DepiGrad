@@ -7,13 +7,62 @@
     ansible_python_interpreter: /usr/bin/python3.8
     
   tasks:
+    - name: Install python3-apt dependency
+      ansible.builtin.apt:
+        name: python3-apt
+        state: present
+        update_cache: yes
+
+    - name: Install Minikube dependencies
+      ansible.builtin.apt:
+        name:
+          - conntrack
+          - curl
+        state: present
+        update_cache: yes
+
     - name: Install Docker
       ansible.builtin.shell: |
         sudo apt-get update
         sudo apt-get install -y docker.io
+
+    - name: Add current user to the docker group
+      ansible.builtin.shell: |
+        sudo usermod -aG docker $USER
+        newgrp docker
+      args:
+        executable: /bin/bash
+
+    - name: Restart Docker service
+      ansible.builtin.service:
+        name: docker
+        state: restarted
+
+    - name: Enable Docker to start on boot
+      ansible.builtin.systemd:
+        name: docker
+        enabled: yes
+
+    - name: Verify Docker installation
+      ansible.builtin.shell: |
+        docker --version
+      register: docker_version_output
+
+    - name: Display Docker version
+      ansible.builtin.debug:
+        var: docker_version_output.stdout
 
     - name: Install Minikube
       ansible.builtin.shell: |
         curl -Lo minikube https://storage.googleapis.com/minikube/releases/latest/minikube-linux-amd64
         chmod +x minikube
         sudo mv minikube /usr/local/bin/
+
+    - name: Verify Minikube installation
+      ansible.builtin.shell: |
+        minikube version
+      register: minikube_version_output
+
+    - name: Display Minikube version
+      ansible.builtin.debug:
+        var: minikube_version_output.stdout
