@@ -136,9 +136,10 @@ resource "azurerm_virtual_machine" "vm" {
       "sudo systemctl start docker",
       "curl -LO https://storage.googleapis.com/minikube/releases/latest/minikube-linux-amd64",
       "sudo install minikube-linux-amd64 /usr/local/bin/minikube",
+      "wget https://github.com/kubernetes-sigs/cri-tools/releases/download/v1.26.0/crictl-v1.26.0-linux-amd64.tar.gz",
+      "tar zxvf crictl-v1.26.0-linux-amd64.tar.gz",
+      "sudo mv crictl /usr/local/bin/",
       "sudo minikube start --driver=none --container-runtime=docker",
-
-      # Check Minikube Status
       "sudo minikube status"
     ]
   }
