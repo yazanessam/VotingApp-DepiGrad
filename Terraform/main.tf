@@ -128,22 +128,33 @@ resource "azurerm_virtual_machine" "vm" {
       host        = azurerm_public_ip.public_ip.ip_address
     }
     inline = [
-      # Update packages
-      "sudo apt-get update",
+      # Update the system packages
+      "sudo apt-get update -y",
       "sudo apt-get install -y apt-transport-https ca-certificates curl software-properties-common",
 
-      # Install Docker using official script
-      "curl -fsSL https://get.docker.com -o get-docker.sh",
-      "sudo sh get-docker.sh",
+      # Reconfigure the apt and update package lists
+      "sudo apt-get update -y",
 
-      # Install Minikube
-      "curl -LO https://storage.googleapis.com/minikube/releases/latest/minikube-linux-amd64",
-      "sudo install minikube-linux-amd64 /usr/local/bin/minikube",
+      # Add Docker’s official GPG key and repository
+      "curl -fsSL https://download.docker.com/linux/ubuntu/gpg | sudo apt-key add -",
+      "sudo add-apt-repository \"deb [arch=amd64] https://download.docker.com/linux/ubuntu $(lsb_release -cs) stable\"",
 
-      # Install kubectl using alternative URL
-      "curl -LO 'https://dl.k8s.io/release/$(curl -s https://dl.k8s.io/release/stable.txt)/bin/linux/amd64/kubectl'",
+      # Install Docker
+      "sudo apt-get update -y",
+      "sudo apt-get install -y docker-ce docker-ce-cli containerd.io",
+
+      # Add current user to docker group to run without sudo
+      "sudo usermod -aG docker $USER",
+
+      # Install Kubernetes (kubectl)
+      "curl -LO https://storage.googleapis.com/kubernetes-release/release/`curl -s https://storage.googleapis.com/kubernetes-release/release/stable.txt`/bin/linux/amd64/kubectl",
       "chmod +x ./kubectl",
       "sudo mv ./kubectl /usr/local/bin/kubectl",
+
+      # Install Minikube
+      "curl -Lo minikube https://storage.googleapis.com/minikube/releases/latest/minikube-linux-amd64",
+      "chmod +x minikube",
+      "sudo install minikube /usr/local/bin/"
 
     ]
   }
