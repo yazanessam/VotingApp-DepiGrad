@@ -13,3 +13,5 @@ terraform apply -auto-approve \
     -var="vm_ssh_key=$TF_VAR_vm_ssh_key"\
     -var="private_vm_ssh_key=$TF_VAR_PRIVATE_vm_ssh_key"| tee terraform-output.txt
 terraform output -json > terraform-output.json
+# shellcheck disable=SC2005
+echo "$(terraform output -raw public_ip)" > public_ip.txt

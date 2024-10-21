@@ -18,6 +18,8 @@ variables:
   AZURE_CLIENT_SECRET: $CI_ARM_CLIENT_SECRET
   AZURE_TENANT_ID: $CI_ARM_TENANT_ID
   AZURE_SUBSCRIPTION_ID: $CI_ARM_SUBSCRIPTION_ID
+  SSH_PRIVATE_KEY: $CI_VM_SSH_PRIVATE_KEY
+  AZURE_USER: $CI_TF_USERNAME
 
 prepare-test-env:
   environment: test
@@ -185,6 +187,7 @@ terraform-build-infra:
       - ./Terraform/terraform.tfstate
   artifacts: 
     paths:
+      - ./Terraform/public_ip.txt
       - ./Terraform/terraform-output.json
   only:
     - main
@@ -210,12 +213,19 @@ deploy-job:      # This job runs in the deploy stage.
   stage: deploy  # It only runs when *both* jobs in the test stage complete successfully.
   image:
     name: bitnami/kubectl
-    entrypoint: [ "" ]
   before_script:
     - source shared-vars.sh
+    - apt-get update && apt-get install -y openssh-client
+    - eval $(ssh-agent -s)
+    - echo "$SSH_PRIVATE_KEY" | tr -d '\r' | ssh-add -
+    - mkdir -p ~/.ssh
+    - export AZURE_HOST=$(cat public_ip.txt)
+    - ssh-keyscan $AZURE_HOST >> ~/.ssh/known_hosts
   script:
     - echo "Deploying application..."
-    - sh ./deploy.sh
+    - ssh $AZURE_USER@$AZURE_HOST "minikube start"
+    - ssh $AZURE_USER@$AZURE_HOST "minikube status"
+    - ssh $AZURE_USER@$AZURE_HOST "sh ./deploy.sh"
     - echo "Application successfully deployed."
   only:
     - Development
