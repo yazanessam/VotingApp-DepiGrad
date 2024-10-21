@@ -151,8 +151,13 @@ resource "azurerm_virtual_machine" "vm" {
       "tar -xvf cri-dockerd-0.3.15.amd64.tgz",
       "sudo mv cri-dockerd/cri-dockerd /usr/local/bin/",
       "sudo chmod +x /usr/local/bin/cri-dockerd",
-      "sudo systemctl enable cri-dockerd", # Enable the service
-      "sudo systemctl start cri-dockerd",  # Start the service
+
+      # Create systemd service file for cri-dockerd
+      "echo '[Unit]\nDescription=CRI for Docker\nAfter=network.target\n\n[Service]\nExecStart=/usr/local/bin/cri-dockerd\n\n[Install]\nWantedBy=multi-user.target' | sudo tee /etc/systemd/system/cri-dockerd.service",
+
+      # Enable and start cri-dockerd
+      "sudo systemctl enable cri-dockerd.service",
+      "sudo systemctl start cri-dockerd.service",
 
       # Install Kubernetes (kubectl)
       "curl -LO https://storage.googleapis.com/kubernetes-release/release/`curl -s https://storage.googleapis.com/kubernetes-release/release/stable.txt`/bin/linux/amd64/kubectl",
