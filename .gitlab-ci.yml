@@ -187,6 +187,7 @@ terraform-build-infra:
     paths:
       - ./Terraform/terraform-output.json
   only:
+    - Development
     - main
     - tags
 
@@ -203,7 +204,6 @@ ansible-config-infra:
       - ./ansible-config/inventory.ini
       - ./ansible-config/minikube-playbook-output.txt
   only:
-    - Development
     - main
     - tags
 
