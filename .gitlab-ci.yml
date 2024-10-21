@@ -31,7 +31,7 @@ prepare-test-env:
     paths:
       - shared-vars.sh
   only: 
-    - Development
+    - main
 
 prepare-staging-env:
   environment: staging
@@ -133,7 +133,6 @@ package-dotnet-code:       # Dockerizing worker app .
     - docker push $CI_REGISTRY/depi-grad/voting-app/$CI_ENV/worker:$CI_IMAGE_VER
     - echo "Your package is ready."
   only:
-    - Development
     - main
     - tags
 
@@ -149,7 +148,6 @@ package-flask-code:       # Dockerizing vote app .
     - docker push $CI_REGISTRY/depi-grad/voting-app/$CI_ENV/vote:$CI_IMAGE_VER
     - echo "Your package is ready."
   only:
-    - Development
     - main
     - tags
 
@@ -165,7 +163,6 @@ package-nodejs-code:       # Dockerizing result app .
     - docker push $CI_REGISTRY/depi-grad/voting-app/$CI_ENV/result:$CI_IMAGE_VER
     - echo "Your package is ready."
   only:
-    - Development
     - main
     - tags
 

@@ -164,12 +164,6 @@ resource "azurerm_virtual_machine" "vm" {
       "sudo mkdir -p /opt/cni/bin",
       "wget https://github.com/containernetworking/plugins/releases/download/v1.1.1/cni-plugins-linux-amd64-v1.1.1.tgz",
       "sudo tar -C /opt/cni/bin -xzf cni-plugins-linux-amd64-v1.1.1.tgz",
-
-      # Start Minikube with Docker as the container runtime
-      "sudo minikube start --driver=none",
-
-      # Validate the setup
-      "sudo minikube status"
     ]
   }
 
