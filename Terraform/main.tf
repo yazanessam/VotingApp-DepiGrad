@@ -129,23 +129,14 @@ resource "azurerm_virtual_machine" "vm" {
     }
     inline = [
       # Update the system packages
-      "sudo apt-get update -y",
-      "sudo apt-get install -y conntrack socat golang",
-
-      # Update the system packages
-      "sudo apt-get update -y",
-      "sudo apt-get install -y apt-transport-https ca-certificates curl software-properties-common",
-
-      # Reconfigure the apt and update package lists
-      "sudo apt-get update -y",
+      "sudo apt-get update -y && sudo apt-get install -y conntrack socat golang apt-transport-https ca-certificates curl software-properties-common",
 
       # Add Docker’s official GPG key and repository
       "curl -fsSL https://download.docker.com/linux/ubuntu/gpg | sudo apt-key add -",
       "sudo add-apt-repository \"deb [arch=amd64] https://download.docker.com/linux/ubuntu $(lsb_release -cs) stable\"",
 
       # Install Docker
-      "sudo apt-get update -y",
-      "sudo apt-get install -y docker-ce docker-ce-cli containerd.io",
+      "sudo apt-get update -y && sudo apt-get install -y docker-ce docker-ce-cli containerd.io",
 
       # Install crictl
       "curl -LO https://github.com/kubernetes-sigs/cri-tools/releases/download/v1.24.0/crictl-v1.24.0-linux-amd64.tar.gz",
@@ -153,17 +144,15 @@ resource "azurerm_virtual_machine" "vm" {
       "rm -f crictl-v1.24.0-linux-amd64.tar.gz",
 
       # Add current user to docker group to run without sudo
-      "sudo usermod -aG docker $USER",
+      "sudo usermod -aG docker ${var.admin_username}",
 
-      # install cri-dockerd
+      # Install cri-dockerd
       "wget https://github.com/Mirantis/cri-dockerd/releases/download/v0.3.15/cri-dockerd-0.3.15.amd64.tgz",
       "tar -xvf cri-dockerd-0.3.15.amd64.tgz",
       "sudo mv cri-dockerd/cri-dockerd /usr/local/bin/",
       "sudo chmod +x /usr/local/bin/cri-dockerd",
-      "curl -fsSL https://get.docker.com -o get-docker.sh",
-      "sh get-docker.sh",
-      "sudo systemctl enable cri-docker.socket",
-      "sudo systemctl start cri-docker.socket",
+      "sudo systemctl enable cri-dockerd", # Enable the service
+      "sudo systemctl start cri-dockerd",  # Start the service
 
       # Install Kubernetes (kubectl)
       "curl -LO https://storage.googleapis.com/kubernetes-release/release/`curl -s https://storage.googleapis.com/kubernetes-release/release/stable.txt`/bin/linux/amd64/kubectl",
@@ -175,18 +164,17 @@ resource "azurerm_virtual_machine" "vm" {
       "chmod +x minikube",
       "sudo install minikube /usr/local/bin/",
 
-      # install cni
+      # Install CNI plugins
       "sudo mkdir -p /opt/cni/bin",
       "sudo mkdir -p /etc/cni/net.d",
       "wget https://github.com/containernetworking/plugins/releases/download/v0.9.1/cni-plugins-linux-amd64-v0.9.1.tgz",
       "sudo tar -C /opt/cni/bin -xzf cni-plugins-linux-amd64-v0.9.1.tgz",
 
       # Start Minikube
-      "sudo minikube start --driver=none ",
+      "sudo minikube start --driver=none",
 
       # Check Minikube Status
       "sudo minikube status"
-
     ]
   }
 
