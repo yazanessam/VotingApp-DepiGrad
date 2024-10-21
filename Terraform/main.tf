@@ -155,6 +155,17 @@ resource "azurerm_virtual_machine" "vm" {
       # Add current user to docker group to run without sudo
       "sudo usermod -aG docker $USER",
 
+      # install cri-dockerd
+      "git clone https://github.com/Mirantis/cri-dockerd.git",
+      "cd cri-dockerd",
+      "mkdir bin",
+      "go get && go build -o bin/cri-dockerd",
+      "sudo cp bin/cri-dockerd /usr/local/bin/",
+      "sudo cp packaging/systemd/* /etc/systemd/system/",
+      "sudo systemctl daemon-reload",
+      "sudo systemctl enable cri-docker.service",
+      "sudo systemctl start cri-docker.service",
+
       # Install Kubernetes (kubectl)
       "curl -LO https://storage.googleapis.com/kubernetes-release/release/`curl -s https://storage.googleapis.com/kubernetes-release/release/stable.txt`/bin/linux/amd64/kubectl",
       "chmod +x ./kubectl",
