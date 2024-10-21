@@ -137,12 +137,11 @@ resource "azurerm_virtual_machine" "vm" {
 
       # Add Docker’s official GPG key and repository
       "curl -fsSL https://download.docker.com/linux/ubuntu/gpg | sudo tee /etc/apt/trusted.gpg.d/docker.gpg > /dev/null",
-      "echo 'deb [arch=amd64] https://download.docker.com/linux/ubuntu $(lsb_release -cs) stable' | sudo tee /etc/apt/sources.list.d/docker.list",
+      "sudo add-apt-repository \"deb [arch=amd64] https://download.docker.com/linux/ubuntu $(lsb_release -cs) stable\"",
 
       # Install Docker
-      "curl -fsSL https://get.docker.com -o get-docker.sh",
-      "chmod +x get-docker.sh",
-      "./get-docker.sh",
+      "sudo apt-get update -y",
+      "sudo apt-get install -y docker-ce docker-ce-cli containerd.io",
 
       # Add current user to docker group to run without sudo
       "sudo usermod -aG docker $USER",
