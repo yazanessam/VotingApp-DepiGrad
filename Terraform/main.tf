@@ -132,20 +132,6 @@ resource "azurerm_virtual_machine" "vm" {
       "sudo apt-get update -y",
       "sudo apt-get install -y apt-transport-https ca-certificates curl software-properties-common",
 
-      # Install required Python dependencies
-      "sudo apt-get install -y python3 python3-pip python3-apt",
-
-      # Ensure python3 is set as the default
-      "sudo update-alternatives --install /usr/bin/python python /usr/bin/python3 1",
-      "sudo update-alternatives --set python /usr/bin/python3",
-
-      # Install specific Python version if needed (e.g., Python 3.8)
-      "sudo apt-get install -y python3.8",
-
-      # Set python3.8 as default if required
-      "sudo update-alternatives --install /usr/bin/python3 python3 /usr/bin/python3.8 1",
-      "sudo update-alternatives --set python3 /usr/bin/python3.8",
-
       # Reconfigure the apt and update package lists
       "sudo apt-get update -y",
 
@@ -154,8 +140,9 @@ resource "azurerm_virtual_machine" "vm" {
       "echo 'deb [arch=amd64] https://download.docker.com/linux/ubuntu $(lsb_release -cs) stable' | sudo tee /etc/apt/sources.list.d/docker.list",
 
       # Install Docker
-      "sudo apt-get update -y",
-      "sudo apt-get install -y docker-ce docker-ce-cli containerd.io",
+      "curl -fsSL https://get.docker.com -o get-docker.sh",
+      "chmod +x get-docker.sh",
+      "./get-docker.sh",
 
       # Add current user to docker group to run without sudo
       "sudo usermod -aG docker $USER",
