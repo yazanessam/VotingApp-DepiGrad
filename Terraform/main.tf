@@ -147,13 +147,15 @@ resource "azurerm_virtual_machine" "vm" {
       "sudo apt-get update -y",
       "sudo apt-get install -y docker-ce docker-ce-cli containerd.io",
 
-      # Install cri-dockerd
-      "sudo apt-get install -y golang-go",
-      "git clone https://github.com/Mirantis/cri-dockerd.git",
-      "cd cri-dockerd",
-      "mkdir bin",
-      "go build -o bin/cri-dockerd",
-      "sudo install bin/cri-dockerd /usr/local/bin/",
+      # Download and install cri-dockerd (latest version)
+      "wget https://github.com/Mirantis/cri-dockerd/archive/refs/tags/v0.3.15.tar.gz",
+
+      # Extract and move cri-dockerd to /usr/local/bin
+      "tar -xvf cri-dockerd-0.3.15.tar.gz",
+      "sudo mv cri-dockerd/cri-dockerd /usr/local/bin/",
+
+      # Set permissions
+      "sudo chmod +x /usr/local/bin/cri-dockerd",
 
       # Install crictl
       "curl -LO https://github.com/kubernetes-sigs/cri-tools/releases/download/v1.24.0/crictl-v1.24.0-linux-amd64.tar.gz",
