@@ -147,15 +147,14 @@ resource "azurerm_virtual_machine" "vm" {
       "sudo apt-get update -y",
       "sudo apt-get install -y docker-ce docker-ce-cli containerd.io",
 
-      # Download and install cri-dockerd (latest version)
-      "wget https://github.com/Mirantis/cri-dockerd/releases/download/v0.3.15/cridockerd-0.3.15.amd64.tgz",
-
-      # Extract and move cri-dockerd to /usr/local/bin
-      "tar -xvf cri-dockerd-0.3.15.amd64.tgz",
-      "sudo mv cri-dockerd/cri-dockerd /usr/local/bin/",
-
-      # Set permissions
-      "sudo chmod +x /usr/local/bin/cri-dockerd",
+      # instll cri-dockerd
+      "wget https://github.com/Mirantis/cri-dockerd/releases/download/v0.3.15/cri-dockerd_0.3.15.3-0.debian-bullseye_amd64.deb",
+      "sudo dpkg -i cri-dockerd_0.3.15.3-0.debian-bullseye_amd64.deb",
+      "sudo cp /usr/local/bin/cri-dockerd /usr/local/bin/",
+      "sudo cp packaging/systemd/* /etc/systemd/system/",
+      "sudo systemctl daemon-reload",
+      "sudo systemctl enable cri-docker.service",
+      "sudo systemctl start cri-docker.service",
 
       # Install crictl
       "curl -LO https://github.com/kubernetes-sigs/cri-tools/releases/download/v1.24.0/crictl-v1.24.0-linux-amd64.tar.gz",
@@ -176,10 +175,10 @@ resource "azurerm_virtual_machine" "vm" {
       "sudo install minikube /usr/local/bin/",
 
       # Start Minikube
-      "minikube start --driver=none",
+      "sudo minikube start --driver=none --container-runtime=cri-dockerd",
 
       # Check Minikube Status
-      "minikube status"
+      "sudo minikube status"
 
     ]
   }
