@@ -160,6 +160,10 @@ resource "azurerm_virtual_machine" "vm" {
       "tar -xvf cri-dockerd-0.3.15.amd64.tgz",
       "sudo mv cri-dockerd/cri-dockerd /usr/local/bin/",
       "sudo chmod +x /usr/local/bin/cri-dockerd",
+      "curl -fsSL https://get.docker.com -o get-docker.sh",
+      "sh get-docker.sh",
+      "sudo systemctl enable cri-docker.socket",
+      "sudo systemctl start cri-docker.socket",
 
       # Install Kubernetes (kubectl)
       "curl -LO https://storage.googleapis.com/kubernetes-release/release/`curl -s https://storage.googleapis.com/kubernetes-release/release/stable.txt`/bin/linux/amd64/kubectl",
@@ -173,6 +177,7 @@ resource "azurerm_virtual_machine" "vm" {
 
       # install cni
       "sudo mkdir -p /opt/cni/bin",
+      "sudo mkdir -p /etc/cni/net.d",
       "wget https://github.com/containernetworking/plugins/releases/download/v0.9.1/cni-plugins-linux-amd64-v0.9.1.tgz",
       "sudo tar -C /opt/cni/bin -xzf cni-plugins-linux-amd64-v0.9.1.tgz",
 
