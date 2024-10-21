@@ -102,7 +102,7 @@ resource "azurerm_virtual_machine" "vm" {
   storage_image_reference {
     publisher = "Canonical"
     offer     = "UbuntuServer"
-    sku       = "24.04-LTS"
+    sku       = "18.04-LTS"
     version   = "latest"
   }
 
@@ -136,7 +136,7 @@ resource "azurerm_virtual_machine" "vm" {
       "sudo apt-get update -y",
 
       # Add Docker’s official GPG key and repository
-      "curl -fsSL https://download.docker.com/linux/ubuntu/gpg | sudo tee /etc/apt/trusted.gpg.d/docker.gpg > /dev/null",
+      "curl -fsSL https://download.docker.com/linux/ubuntu/gpg | sudo apt-key add -",
       "sudo add-apt-repository \"deb [arch=amd64] https://download.docker.com/linux/ubuntu $(lsb_release -cs) stable\"",
 
       # Install Docker
