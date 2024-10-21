@@ -130,7 +130,7 @@ resource "azurerm_virtual_machine" "vm" {
     inline = [
       # Update the system packages
       "sudo apt-get update -y",
-      "sudo apt-get install -y conntrack",
+      "sudo apt-get install -y conntrack socat golang",
 
       # Update the system packages
       "sudo apt-get update -y",
@@ -156,15 +156,10 @@ resource "azurerm_virtual_machine" "vm" {
       "sudo usermod -aG docker $USER",
 
       # install cri-dockerd
-      "git clone https://github.com/Mirantis/cri-dockerd.git",
-      "cd cri-dockerd",
-      "mkdir bin",
-      "go get && go build -o bin/cri-dockerd",
-      "sudo cp bin/cri-dockerd /usr/local/bin/",
-      "sudo cp packaging/systemd/* /etc/systemd/system/",
-      "sudo systemctl daemon-reload",
-      "sudo systemctl enable cri-docker.service",
-      "sudo systemctl start cri-docker.service",
+      "wget https://github.com/Mirantis/cri-dockerd/releases/download/v0.3.15/cri-dockerd-0.3.15.amd64.tgz",
+      "tar -xvf cri-dockerd-0.3.15.amd64.tgz",
+      "sudo mv cri-dockerd/cri-dockerd /usr/local/bin/",
+      "sudo chmod +x /usr/local/bin/cri-dockerd",
 
       # Install Kubernetes (kubectl)
       "curl -LO https://storage.googleapis.com/kubernetes-release/release/`curl -s https://storage.googleapis.com/kubernetes-release/release/stable.txt`/bin/linux/amd64/kubectl",
