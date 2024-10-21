@@ -130,6 +130,10 @@ resource "azurerm_virtual_machine" "vm" {
     inline = [
       # Update the system packages
       "sudo apt-get update -y",
+      "sudo apt-get install -y conntrack",
+
+      # Update the system packages
+      "sudo apt-get update -y",
       "sudo apt-get install -y apt-transport-https ca-certificates curl software-properties-common",
 
       # Reconfigure the apt and update package lists
