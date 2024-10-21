@@ -172,6 +172,7 @@ resource "azurerm_virtual_machine" "vm" {
       "sudo install minikube /usr/local/bin/",
 
       # install cni
+      "sudo mkdir -p /opt/cni/bin",
       "wget https://github.com/containernetworking/plugins/releases/download/v0.9.1/cni-plugins-linux-amd64-v0.9.1.tgz",
       "sudo tar -C /opt/cni/bin -xzf cni-plugins-linux-amd64-v0.9.1.tgz",
 
