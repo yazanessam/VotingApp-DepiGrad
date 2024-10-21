@@ -190,6 +190,7 @@ terraform-build-infra:
       - ./Terraform/public_ip.txt
       - ./Terraform/terraform-output.json
   only:
+    - Development
     - main
     - tags
 
@@ -212,10 +213,11 @@ ansible-config-infra:
 deploy-job:      # This job runs in the deploy stage.
   stage: deploy  # It only runs when *both* jobs in the test stage complete successfully.
   image:
-    name: bitnami/kubectl
+    name: alpine:latest
   before_script:
     - source shared-vars.sh
-    - apt-get update && apt-get install -y openssh-client
+    - apk update
+    - apk add --no-cache openssh-client curl bash
     - eval $(ssh-agent -s)
     - echo "$SSH_PRIVATE_KEY" | tr -d '\r' | ssh-add -
     - mkdir -p ~/.ssh
