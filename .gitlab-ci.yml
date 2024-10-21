@@ -31,7 +31,7 @@ prepare-test-env:
     paths:
       - shared-vars.sh
   only: 
-    - main
+    - Development
 
 prepare-staging-env:
   environment: staging
@@ -80,6 +80,7 @@ build-dotnet-code:       # Build worker code.
     paths:
       - worker/publish/
   only:
+    - Development
     - main
     - tags
 
@@ -132,6 +133,7 @@ package-dotnet-code:       # Dockerizing worker app .
     - docker push $CI_REGISTRY/depi-grad/voting-app/$CI_ENV/worker:$CI_IMAGE_VER
     - echo "Your package is ready."
   only:
+    - Development
     - main
     - tags
 
@@ -147,6 +149,7 @@ package-flask-code:       # Dockerizing vote app .
     - docker push $CI_REGISTRY/depi-grad/voting-app/$CI_ENV/vote:$CI_IMAGE_VER
     - echo "Your package is ready."
   only:
+    - Development 
     - main
     - tags
 
@@ -162,6 +165,7 @@ package-nodejs-code:       # Dockerizing result app .
     - docker push $CI_REGISTRY/depi-grad/voting-app/$CI_ENV/result:$CI_IMAGE_VER
     - echo "Your package is ready."
   only:
+    - Development
     - main
     - tags
 
@@ -183,7 +187,6 @@ terraform-build-infra:
     paths:
       - ./Terraform/terraform-output.json
   only:
-    - Development
     - main
     - tags
 
@@ -212,6 +215,7 @@ deploy-job:      # This job runs in the deploy stage.
     - source shared-vars.sh
   script:
     - echo "Deploying application..."
+    - minikube start 
     - sh ./deploy.sh
     - echo "Application successfully deployed."
   only:
