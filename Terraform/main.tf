@@ -128,55 +128,15 @@ resource "azurerm_virtual_machine" "vm" {
       host        = azurerm_public_ip.public_ip.ip_address
     }
     inline = [
-      # Update the system packages
-      "sudo apt-get update -y && sudo apt-get install -y conntrack socat golang apt-transport-https ca-certificates curl software-properties-common",
 
-      # Add Docker’s official GPG key and repository
-      "curl -fsSL https://download.docker.com/linux/ubuntu/gpg | sudo apt-key add -",
-      "sudo add-apt-repository \"deb [arch=amd64] https://download.docker.com/linux/ubuntu $(lsb_release -cs) stable\"",
-
-      # Install Docker
-      "sudo apt-get update -y && sudo apt-get install -y docker-ce docker-ce-cli containerd.io",
-
-      # Install crictl
-      "curl -LO https://github.com/kubernetes-sigs/cri-tools/releases/download/v1.24.0/crictl-v1.24.0-linux-amd64.tar.gz",
-      "sudo tar zxvf crictl-v1.24.0-linux-amd64.tar.gz -C /usr/local/bin",
-      "rm -f crictl-v1.24.0-linux-amd64.tar.gz",
-
-      # Add current user to docker group to run without sudo
-      "sudo usermod -aG docker ${var.admin_username}",
-
-      # Install cri-dockerd
-      "wget https://github.com/Mirantis/cri-dockerd/releases/download/v0.3.15/cri-dockerd-0.3.15.amd64.tgz",
-      "tar -xvf cri-dockerd-0.3.15.amd64.tgz",
-      "sudo mv cri-dockerd/cri-dockerd /usr/local/bin/",
-      "sudo chmod +x /usr/local/bin/cri-dockerd",
-
-      # Create systemd service file for cri-dockerd
-      "echo '[Unit]\nDescription=CRI for Docker\nAfter=network.target\n\n[Service]\nExecStart=/usr/local/bin/cri-dockerd\n\n[Install]\nWantedBy=multi-user.target' | sudo tee /etc/systemd/system/cri-dockerd.service",
-
-      # Enable and start cri-dockerd
-      "sudo systemctl enable cri-dockerd.service",
-      "sudo systemctl start cri-dockerd.service",
-
-      # Install Kubernetes (kubectl)
-      "curl -LO https://storage.googleapis.com/kubernetes-release/release/`curl -s https://storage.googleapis.com/kubernetes-release/release/stable.txt`/bin/linux/amd64/kubectl",
-      "chmod +x ./kubectl",
-      "sudo mv ./kubectl /usr/local/bin/kubectl",
-
-      # Install Minikube
-      "curl -Lo minikube https://storage.googleapis.com/minikube/releases/latest/minikube-linux-amd64",
-      "chmod +x minikube",
-      "sudo install minikube /usr/local/bin/",
-
-      # Install CNI plugins
-      "sudo mkdir -p /opt/cni/bin",
-      "sudo mkdir -p /etc/cni/net.d",
-      "wget https://github.com/containernetworking/plugins/releases/download/v0.9.1/cni-plugins-linux-amd64-v0.9.1.tgz",
-      "sudo tar -C /opt/cni/bin -xzf cni-plugins-linux-amd64-v0.9.1.tgz",
-
-      # Start Minikube
-      "sudo minikube start --driver=none",
+      "sudo apt-get update -y",
+      "sudo apt-get upgrade -y",
+      "sudo apt-get install -y docker.io",
+      "sudo systemctl enable docker",
+      "sudo systemctl start docker",
+      "curl -LO https://storage.googleapis.com/minikube/releases/latest/minikube-linux-amd64",
+      "sudo install minikube-linux-amd64 /usr/local/bin/minikube",
+      "sudo minikube start --driver=none --container-runtime=docker",
 
       # Check Minikube Status
       "sudo minikube status"
