@@ -80,7 +80,6 @@ build-dotnet-code:       # Build worker code.
     paths:
       - worker/publish/
   only:
-    - Development
     - main
     - tags
 
@@ -92,7 +91,6 @@ test-dontnet-code:   # Test worker code.
     - cd worker
     - dotnet test  --logger "trx;LogFileName=TestResults/Dotnet-TestResults_$(date +%s).trx"      # Test the code and save the testing results.
   only:
-    - Development
     - main
     - tags
 
@@ -107,7 +105,6 @@ test-flask-code:   # Test vote code.
     - PYTHONPATH=. pytest tests/
     - flake8 .
   only:
-    - Development
     - main
     - tags
 
@@ -120,7 +117,6 @@ test-nodejs-code:   # Test result code.
     - npm install --save-dev jest supertest
     - npm test 
   only:
-    - Development
     - main
     - tags
 
@@ -132,8 +128,8 @@ package-dotnet-code:       # Dockerizing worker app .
   script:
     - echo "Packaging the code..."
     - docker login $CI_REGISTRY -u $CI_REGISTRY_USER -p $CI_REGISTRY_PASSWORD
-    - docker build -t $CI_REGISTRY/depi9980437/voting-app/$CI_ENV/worker:$CI_IMAGE_VER ./worker
-    - docker push $CI_REGISTRY/depi9980437/voting-app/$CI_ENV/worker:$CI_IMAGE_VER
+    - docker build -t $CI_REGISTRY/depi-grad/voting-app/$CI_ENV/worker:$CI_IMAGE_VER ./worker
+    - docker push $CI_REGISTRY/depi-grad/voting-app/$CI_ENV/worker:$CI_IMAGE_VER
     - echo "Your package is ready."
   only:
     - Development
@@ -148,8 +144,8 @@ package-flask-code:       # Dockerizing vote app .
   script:
     - echo "Packaging the code..."
     - docker login $CI_REGISTRY -u $CI_REGISTRY_USER -p $CI_REGISTRY_PASSWORD
-    - docker build -t $CI_REGISTRY/depi9980437/voting-app/$CI_ENV/vote:$CI_IMAGE_VER ./vote
-    - docker push $CI_REGISTRY/depi9980437/voting-app/$CI_ENV/vote:$CI_IMAGE_VER
+    - docker build -t $CI_REGISTRY/depi-grad/voting-app/$CI_ENV/vote:$CI_IMAGE_VER ./vote
+    - docker push $CI_REGISTRY/depi-grad/voting-app/$CI_ENV/vote:$CI_IMAGE_VER
     - echo "Your package is ready."
   only:
     - Development
@@ -164,8 +160,8 @@ package-nodejs-code:       # Dockerizing result app .
   script:
     - echo "Packaging the code..."
     - docker login $CI_REGISTRY -u $CI_REGISTRY_USER -p $CI_REGISTRY_PASSWORD
-    - docker build -t $CI_REGISTRY/depi9980437/voting-app/$CI_ENV/result:$CI_IMAGE_VER ./result
-    - docker push $CI_REGISTRY/depi9980437/voting-app/$CI_ENV/result:$CI_IMAGE_VER
+    - docker build -t $CI_REGISTRY/depi-grad/voting-app/$CI_ENV/result:$CI_IMAGE_VER ./result
+    - docker push $CI_REGISTRY/depi-grad/voting-app/$CI_ENV/result:$CI_IMAGE_VER
     - echo "Your package is ready."
   only:
     - Development
